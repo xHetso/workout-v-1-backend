@@ -4,16 +4,10 @@ import express from 'express'
 import morgan from 'morgan'
 
 import authRoutes from './app/auth/auth.routes.js'
+import { errorHandler, notFound } from './app/middleware/error.middleware.js'
 import { prisma } from './app/prisma.js'
 
 dotenv.config()
-
-/*
-TODO:
-	[] - Async error handling for method
-	[] - App.use notFound, errorHandler
-	[] - 
-*/
 
 const app = express()
 
@@ -21,6 +15,8 @@ async function main() {
 	if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 	app.use(express.json())
 	app.use('/api/auth', authRoutes)
+
+	app.use(notFound), app.use(errorHandler)
 
 	const PORT = process.env.PORT || 5000
 
